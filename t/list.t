@@ -9,14 +9,34 @@ sub init : Test(1) {
     new_ok 'My::List';
 }
 
+sub basic : Tests {
+		my $list = My::List->new;
+		isa_ok $list,'Aggregate';
+		isa_ok $list,'My::List';
+		my $iter = $list->iterator;
+		is $iter->has_next,0;
+}
+
 sub values : Tests {
     my $list = My::List->new;
 		$list->append("Hello");			
 		$list->append("World");
 		$list->append(2011);
+		$list->append([1,2,3,4,5]);
+		$list->append({apple=>"red",banana=>"yellow"});
 		my $iter = $list->iterator;
-		$iter->has_next;
-		is_deeply [$iter->next->value], ["World"];
+		is $iter->has_next,1;
+
+		my $first = $iter->next;
+		is $first->value, "Hello";
+
+		my $second_value = $iter->next->value;
+		is $second_value, "World";
+		is $iter->next->value, 2011;
+		is_deeply [@{$iter->next->value}], [1,2,3,4,5];
+		is $iter->next->value->{banana}, "yellow";
+
+		is $iter->next,undef;
 }
 
 __PACKAGE__->runtests;
