@@ -15,28 +15,29 @@ sub basic : Tests {
 		isa_ok $list,'My::List';
 		my $iter = $list->iterator;
 		is $iter->has_next,0;
+
+		$list->append("Hello");
+		$list->append("World");			
+		is $iter->has_next,1;
+
+		$iter = $list->iterator;
+		is $iter->next->value, "Hello";
+		is $iter->next->value, "World";
+		is $iter->next, undef;
 }
 
 sub values : Tests {
     my $list = My::List->new;
 		$list->append("Hello");			
-		$list->append("World");
 		$list->append(2011);
 		$list->append([1,2,3,4,5]);
 		$list->append({apple=>"red",banana=>"yellow"});
+
 		my $iter = $list->iterator;
-		is $iter->has_next,1;
-
-		my $first = $iter->next;
-		is $first->value, "Hello";
-
-		my $second_value = $iter->next->value;
-		is $second_value, "World";
+		is $iter->next->value, "Hello";
 		is $iter->next->value, 2011;
 		is_deeply [@{$iter->next->value}], [1,2,3,4,5];
 		is $iter->next->value->{banana}, "yellow";
-
-		is $iter->next,undef;
 }
 
 __PACKAGE__->runtests;
