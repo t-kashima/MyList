@@ -1,37 +1,42 @@
 package My::List;
 use strict;
 use warnings;
-use base qw/Aggregate/;
 use My::ListIterator;
 use Element;
 
 sub new {
-		my ($class) = @_;
-		my $data_structure = {
-				elems => [],
-		};
-		my $self = bless $data_structure, $class;
-		return $self;
+    my ($class) = @_;
+    my $elem = Element->new;
+    my $data_structure = {
+        head => \$elem,
+        tail => \$elem,
+    };
+    my $self = bless $data_structure, $class;
+    return $self;
 }
 
 sub iterator {
-		my ($self) = @_;
-		return My::ListIterator->new($self);
+    my ($self) = @_;
+    return My::ListIterator->new(${$self->{head}});
 }
 
 sub append {
-		my ($self,$value) = @_;
-		push(@{$self->{elems}},Element->new($value));
+    my ($self,$value) = @_;
+    my $elem = Element->new($value);
+    ${$self->{tail}}->{next} = \$elem; 
+    $self->{tail} = \$elem;
 }
 
+=pod
 sub get_list_at {
-		my ($self,$index) = @_;
-		return $self->{elems}->[$index];
+    my ($self,$index) = @_;
+    return $self->{elems}->[$index];
 }
 
 sub get_length {
-		my ($self) = @_;
-		return scalar @{$self->{elems}};
+    my ($self) = @_;
+    return scalar @{$self->{elems}};
 }
+=cut
 
 1;
