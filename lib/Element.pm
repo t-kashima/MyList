@@ -5,7 +5,7 @@ use warnings;
 sub new {
     my ($class,$value) = @_;
     my $data_structure = {
-        value => $value,
+        value => $value || "",
         next => undef
     };
     my $self = bless $data_structure, $class;

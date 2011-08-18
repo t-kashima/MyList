@@ -30,16 +30,21 @@ sub values : Tests {
     $list->append("Hello");			
     $list->append(2011);
     is $list->get_list_at(1)->value, 2011;
+
     $list->append([1,2,3,4,5]);
     is $list->get_length, 3;
-    #$list->remove(1);
-    $list->append({apple=>"red",banana=>"yellow"});
+    $list->remove(1);
+    is $list->get_length, 2;
 
     my $iter = $list->iterator;
-    is $iter->next->value, "Hello";
-    is $iter->next->value, 2011;
+    $iter->next->value;
     is_deeply [@{$iter->next->value}], [1,2,3,4,5];
-    is $iter->next->value->{banana}, "yellow";
+
+    $list->append({apple=>"red",banana=>"yellow"});
+    is $list->get_list_at(2)->value->{banana}, "yellow";
+    
+    $list->insert(1,"Hello");
+    is $list->get_list_at(3)->value->{apple}, "red";
 }
 
 __PACKAGE__->runtests;

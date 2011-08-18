@@ -45,9 +45,21 @@ sub get_length {
     return $self->{length};
 }
 
+sub insert {
+    my ($self,$index,$value) = @_;    
+    my $elem = Element->new($value);    
+    if(($self->{length}-1) < $index){
+        $elem->{next} = ${$self->{tail}}->next;
+        ${$self->{tail}}->{next} = \$elem;
+    }
+    $elem->{next} = $self->get_list_at($index)->next;
+    $self->get_list_at($index)->{next} = \$elem;
+}
+
 sub remove {
     my ($self,$index) = @_;
-    $self->get_list_at($index-1)->{next} = \$self->get_list_at($index+1);
+    my $next_elem = $self->get_list_at($index+1);
+    $self->get_list_at($index-1)->{next} = \$next_elem;
     $self->{length}--;
     return $self->{length};
 }
