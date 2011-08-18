@@ -29,7 +29,10 @@ sub values : Tests {
     my $list = My::List->new;
     $list->append("Hello");			
     $list->append(2011);
+    is $list->get_list_at(1)->value, 2011;
     $list->append([1,2,3,4,5]);
+    is $list->get_length, 3;
+    #$list->remove(1);
     $list->append({apple=>"red",banana=>"yellow"});
 
     my $iter = $list->iterator;

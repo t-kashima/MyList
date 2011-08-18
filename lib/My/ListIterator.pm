@@ -18,7 +18,7 @@ sub next {
         $self->{elem} = ${$self->{elem}}->{next};
         return ${$self->{elem}};
     }
-    return;
+    return undef;
 }
 
 sub has_next {
